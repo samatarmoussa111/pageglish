@@ -1,12 +1,34 @@
-import { DashboardLayout } from "@/components/dashboard-layout"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, Save, Send, Clock, Target, CheckCircle, MessageSquare, Edit } from "lucide-react"
-import Link from "next/link"
+import { DashboardLayout } from "@/components/dashboard-layout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import {
+  ArrowLeft,
+  Save,
+  Send,
+  Clock,
+  Target,
+  CheckCircle,
+  MessageSquare,
+  Edit,
+} from "lucide-react";
+import Link from "next/link";
 
-const getWritingSubject = (id: string) => {
+type WritingSubject = {
+  id: number;
+  title: string;
+  description: string;
+  status: string;
+  dueDate: string;
+  targetWords: number;
+  content: string;
+  instructions: string[];
+  correctedContent?: string;
+  teacherRemarks?: string[];
+};
+
+const getWritingSubject = (id: string): WritingSubject => {
   const subjects = {
     "1": {
       id: 1,
@@ -29,7 +51,8 @@ const getWritingSubject = (id: string) => {
     "2": {
       id: 2,
       title: "The Impact of Technology on Education",
-      description: "Discuss how technology has changed the way we learn. Consider both positive and negative aspects.",
+      description:
+        "Discuss how technology has changed the way we learn. Consider both positive and negative aspects.",
       status: "inreview",
       dueDate: "2024-01-10",
       targetWords: 400,
@@ -70,12 +93,16 @@ const getWritingSubject = (id: string) => {
         "Maintain consistent verb tense",
       ],
     },
-  }
-  return subjects[id as keyof typeof subjects] || subjects["1"]
-}
+  };
+  return subjects[id as keyof typeof subjects] || subjects["1"];
+};
 
-export default function WritingEditorPage({ params }: { params: { id: string } }) {
-  const writingSubject = getWritingSubject(params.id)
+export default function WritingEditorPage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const writingSubject = getWritingSubject(params.id);
 
   if (writingSubject.status === "done") {
     return (
@@ -96,7 +123,9 @@ export default function WritingEditorPage({ params }: { params: { id: string } }
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div className="space-y-2">
-                  <CardTitle className="text-2xl">{writingSubject.title}</CardTitle>
+                  <CardTitle className="text-2xl">
+                    {writingSubject.title}
+                  </CardTitle>
                   <p className="text-gray-600">{writingSubject.description}</p>
                 </div>
                 <Badge className="bg-muted text-muted-foreground">
@@ -120,7 +149,9 @@ export default function WritingEditorPage({ params }: { params: { id: string } }
                 </CardHeader>
                 <CardContent>
                   <div className="p-4 bg-muted/30 rounded-lg">
-                    <p className="text-foreground leading-relaxed whitespace-pre-wrap">{writingSubject.content}</p>
+                    <p className="text-foreground leading-relaxed whitespace-pre-wrap">
+                      {writingSubject.content}
+                    </p>
                   </div>
                 </CardContent>
               </Card>
@@ -130,7 +161,7 @@ export default function WritingEditorPage({ params }: { params: { id: string } }
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <CheckCircle className="h-5 w-5 text-green-600" />
-                    <span>Teacher's Correction</span>
+                    <span>Teacher&apos;s Correction</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -149,14 +180,16 @@ export default function WritingEditorPage({ params }: { params: { id: string } }
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <MessageSquare className="h-5 w-5" />
-                    <span>Teacher's Remarks</span>
+                    <span>Teacher&apos;s Remarks</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
                     {writingSubject.teacherRemarks?.map((remark, index) => (
                       <div key={index} className="p-3 bg-muted/30 rounded-lg">
-                        <p className="text-sm text-muted-foreground">{remark}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {remark}
+                        </p>
                       </div>
                     ))}
                   </div>
@@ -166,7 +199,7 @@ export default function WritingEditorPage({ params }: { params: { id: string } }
           </div>
         </div>
       </DashboardLayout>
-    )
+    );
   }
 
   if (writingSubject.status === "inreview") {
@@ -188,7 +221,9 @@ export default function WritingEditorPage({ params }: { params: { id: string } }
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div className="space-y-2">
-                  <CardTitle className="text-2xl">{writingSubject.title}</CardTitle>
+                  <CardTitle className="text-2xl">
+                    {writingSubject.title}
+                  </CardTitle>
                   <p className="text-gray-600">{writingSubject.description}</p>
                 </div>
                 <Badge className="bg-muted text-muted-foreground">
@@ -206,7 +241,9 @@ export default function WritingEditorPage({ params }: { params: { id: string } }
                 </div>
                 <div className="flex items-center space-x-1">
                   <Clock className="h-4 w-4" />
-                  <span>Due: {new Date(writingSubject.dueDate).toLocaleDateString()}</span>
+                  <span>
+                    Due: {new Date(writingSubject.dueDate).toLocaleDateString()}
+                  </span>
                 </div>
               </div>
             </CardContent>
@@ -217,23 +254,27 @@ export default function WritingEditorPage({ params }: { params: { id: string } }
             <CardHeader>
               <CardTitle>Your Submission</CardTitle>
               <p className="text-sm text-gray-600">
-                Your writing has been submitted and is currently being reviewed by your teacher.
+                Your writing has been submitted and is currently being reviewed
+                by your teacher.
               </p>
             </CardHeader>
             <CardContent>
               <div className="p-4 bg-muted/30 rounded-lg">
-                <p className="text-foreground leading-relaxed whitespace-pre-wrap">{writingSubject.content}</p>
+                <p className="text-foreground leading-relaxed whitespace-pre-wrap">
+                  {writingSubject.content}
+                </p>
               </div>
               <div className="mt-4 text-sm text-muted-foreground">
                 <span>
-                  {writingSubject.content.split(" ").length} / {writingSubject.targetWords} words
+                  {writingSubject.content.split(" ").length} /{" "}
+                  {writingSubject.targetWords} words
                 </span>
               </div>
             </CardContent>
           </Card>
         </div>
       </DashboardLayout>
-    )
+    );
   }
 
   return (
@@ -254,7 +295,9 @@ export default function WritingEditorPage({ params }: { params: { id: string } }
           <CardHeader>
             <div className="flex items-start justify-between">
               <div className="space-y-2">
-                <CardTitle className="text-2xl">{writingSubject.title}</CardTitle>
+                <CardTitle className="text-2xl">
+                  {writingSubject.title}
+                </CardTitle>
                 <p className="text-gray-600">{writingSubject.description}</p>
               </div>
               <Badge
@@ -277,7 +320,9 @@ export default function WritingEditorPage({ params }: { params: { id: string } }
               </div>
               <div className="flex items-center space-x-1">
                 <Clock className="h-4 w-4" />
-                <span>Due: {new Date(writingSubject.dueDate).toLocaleDateString()}</span>
+                <span>
+                  Due: {new Date(writingSubject.dueDate).toLocaleDateString()}
+                </span>
               </div>
             </div>
           </CardContent>
@@ -300,8 +345,12 @@ export default function WritingEditorPage({ params }: { params: { id: string } }
                 <div className="flex items-center justify-between">
                   <div className="text-sm text-muted-foreground">
                     <span>
-                      {writingSubject.content.split(" ").filter((word) => word.length > 0).length} /{" "}
-                      {writingSubject.targetWords} words
+                      {
+                        writingSubject.content
+                          .split(" ")
+                          .filter((word) => word.length > 0).length
+                      }{" "}
+                      / {writingSubject.targetWords} words
                     </span>
                   </div>
 
@@ -345,15 +394,21 @@ export default function WritingEditorPage({ params }: { params: { id: string } }
               <CardContent className="space-y-3 text-sm">
                 <div className="p-3 bg-muted/30 rounded-lg">
                   <p className="font-medium text-foreground">Planning</p>
-                  <p className="text-muted-foreground">Take a few minutes to outline your ideas before writing.</p>
+                  <p className="text-muted-foreground">
+                    Take a few minutes to outline your ideas before writing.
+                  </p>
                 </div>
                 <div className="p-3 bg-muted/30 rounded-lg">
                   <p className="font-medium text-foreground">Vocabulary</p>
-                  <p className="text-muted-foreground">Use varied vocabulary to make your writing more engaging.</p>
+                  <p className="text-muted-foreground">
+                    Use varied vocabulary to make your writing more engaging.
+                  </p>
                 </div>
                 <div className="p-3 bg-muted/30 rounded-lg">
                   <p className="font-medium text-foreground">Review</p>
-                  <p className="text-muted-foreground">Always proofread your work before submitting.</p>
+                  <p className="text-muted-foreground">
+                    Always proofread your work before submitting.
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -361,5 +416,5 @@ export default function WritingEditorPage({ params }: { params: { id: string } }
         </div>
       </div>
     </DashboardLayout>
-  )
+  );
 }
