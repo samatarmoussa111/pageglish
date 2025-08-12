@@ -97,12 +97,13 @@ const getWritingSubject = (id: string): WritingSubject => {
   return subjects[id as keyof typeof subjects] || subjects["1"];
 };
 
-export default function WritingEditorPage({
+export default async function WritingEditorPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const writingSubject = getWritingSubject(params.id);
+  const { id } = await params;
+  const writingSubject = getWritingSubject(id);
 
   if (writingSubject.status === "done") {
     return (
